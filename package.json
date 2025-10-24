@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npx http-server . -p 3000 -o",
     "dev": "npx live-server --port=3000 --open=/",
-    "build": "echo 'No build process needed for static site'",
+    "build": "echo 'Static site ready for deployment'",
     "serve": "npx serve . -p 3000"
   },
   "keywords": [
@@ -35,3 +35,4 @@
   },
   "homepage": "https://jbnqidiruv.com"
 }
+
