@@ -1,0 +1,1515 @@
+// JBN Ecosystem - Interactive Features
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize all features
+    initializeNavigation();
+    initializeFloatingCards();
+    initializeServiceCards();
+    initializeAnimations();
+    initializeContactForm();
+    initializeParticleSystem();
+    initializeScrollEffects();
+    initializeGoogleSearch();
+    initializeSignIn();
+    checkUserLoginStatus();
+    initializeTelegramContact();
+    initializeGlobalClickEffects();
+});
+
+// Navigation functionality
+function initializeNavigation() {
+    const navLinks = document.querySelectorAll('.nav-link');
+    const sections = document.querySelectorAll('section');
+    
+    // Add click event listeners to navigation links
+    navLinks.forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href');
+            const targetSection = document.querySelector(targetId);
+            
+            if (targetSection) {
+                targetSection.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                
+                // Update active nav link
+                navLinks.forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            }
+        });
+    });
+    
+    // Update active nav link on scroll
+    window.addEventListener('scroll', function() {
+        let current = '';
+        sections.forEach(section => {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.clientHeight;
+            if (scrollY >= (sectionTop - 200)) {
+                current = section.getAttribute('id');
+            }
+        });
+        
+        navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === '#' + current) {
+                link.classList.add('active');
+            }
+        });
+    });
+}
+
+// Floating cards animation
+function initializeFloatingCards() {
+    const floatingCards = document.querySelectorAll('.floating-card');
+    
+    floatingCards.forEach((card, index) => {
+        // Add hover effects
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'scale(1.1) rotate(5deg)';
+            this.style.zIndex = '10';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.zIndex = '';
+        });
+        
+        // Add click effects
+        card.addEventListener('click', function() {
+            // Create ripple effect
+            const ripple = document.createElement('div');
+            ripple.style.position = 'absolute';
+            ripple.style.borderRadius = '50%';
+            ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+            ripple.style.transform = 'scale(0)';
+            ripple.style.animation = 'ripple 0.6s linear';
+            ripple.style.left = '50%';
+            ripple.style.top = '50%';
+            ripple.style.width = '100px';
+            ripple.style.height = '100px';
+            ripple.style.marginLeft = '-50px';
+            ripple.style.marginTop = '-50px';
+            
+            this.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+        });
+    });
+}
+
+// Service cards interaction
+function initializeServiceCards() {
+    const serviceCards = document.querySelectorAll('.service-card');
+    const serviceBtns = document.querySelectorAll('.service-btn');
+    
+    serviceCards.forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateY(-15px) scale(1.02)';
+            this.style.boxShadow = '0 30px 80px rgba(0, 242, 254, 0.3)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.transform = '';
+            this.style.boxShadow = '';
+        });
+    });
+    
+    serviceBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const serviceName = this.closest('.service-card').querySelector('h3').textContent;
+            showServiceModal(serviceName);
+        });
+    });
+}
+
+// Service modal functionality
+function showServiceModal(serviceName) {
+    const modal = document.createElement('div');
+    modal.className = 'service-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${serviceName}</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="service-preview">
+                        <div class="preview-icon">
+                            <i class="fas fa-${getServiceIcon(serviceName)}"></i>
+                        </div>
+                        <div class="preview-content">
+                            <h4>Coming Soon!</h4>
+                            <p>This service is currently under development. Stay tuned for updates!</p>
+                            <div class="preview-features">
+                                <span>Advanced Features</span>
+                                <span>AI Integration</span>
+                                <span>Mobile Support</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-primary">Get Notified</button>
+                        <button class="btn-secondary">Learn More</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Add modal styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .service-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        .modal-content {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(30, 60, 114, 0.9) 100%);
+            border-radius: 25px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+        }
+        .modal-header h3 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .close-modal:hover {
+            color: #00f2fe;
+            transform: scale(1.1);
+        }
+        .modal-body {
+            padding: 2rem;
+        }
+        .service-preview {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .preview-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        .preview-content h4 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .preview-content p {
+            color: #b0b0b0;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .preview-features {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .preview-features span {
+            background: rgba(0, 242, 254, 0.1);
+            color: #00f2fe;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+        }
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .modal-actions .btn-primary,
+        .modal-actions .btn-secondary {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+        }
+        .modal-actions .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .modal-actions .btn-secondary {
+            background: transparent;
+            color: #00f2fe;
+            border: 2px solid #00f2fe;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes ripple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Close modal functionality
+    modal.querySelector('.close-modal').addEventListener('click', () => {
+        modal.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(modal);
+            document.head.removeChild(style);
+        }, 300);
+    });
+    
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            modal.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(modal);
+                document.head.removeChild(style);
+            }, 300);
+        }
+    });
+}
+
+// Get service icon based on service name
+function getServiceIcon(serviceName) {
+    const iconMap = {
+        'JBN VIDEO': 'play',
+        'JBN NEWS': 'newspaper',
+        'JBN MAIL': 'envelope',
+        'JBN MESSENGER': 'comments',
+        'JBN MAP': 'map-marker-alt',
+        'JBN GAMES': 'gamepad',
+        'JBN MARKET': 'shopping-cart',
+        'JBN MUSIC': 'music',
+        'JBN EDU': 'graduation-cap',
+        'JBN AI': 'brain',
+        'JBN PAY': 'credit-card',
+        'JBN INT TEST': 'tachometer-alt'
+    };
+    return iconMap[serviceName] || 'star';
+}
+
+// Initialize animations
+function initializeAnimations() {
+    // Add scroll animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+    
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.opacity = '1';
+                entry.target.style.transform = 'translateY(0)';
+            }
+        });
+    }, observerOptions);
+    
+    // Observe elements for animation
+    const animatedElements = document.querySelectorAll('.service-card, .about-text, .contact-info, .floating-card');
+    animatedElements.forEach(el => {
+        el.style.opacity = '0';
+        el.style.transform = 'translateY(30px)';
+        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+        observer.observe(el);
+    });
+}
+
+// Contact form functionality
+function initializeContactForm() {
+    const contactForm = document.querySelector('.form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            handleFormSubmission();
+        });
+    }
+}
+
+// Form submission handling
+function handleFormSubmission() {
+    const formData = new FormData(document.querySelector('.form'));
+    const name = document.querySelector('input[placeholder="Your Name"]').value;
+    const email = document.querySelector('input[placeholder="Your Email"]').value;
+    const message = document.querySelector('textarea').value;
+    
+    if (name && email && message) {
+        showNotification('Message sent successfully! We\'ll get back to you soon.', 'success');
+        document.querySelector('.form').reset();
+    } else {
+        showNotification('Please fill in all fields.', 'error');
+    }
+}
+
+// Notification system
+function showNotification(message, type = 'info') {
+    const notification = document.createElement('div');
+    notification.className = `notification notification-${type}`;
+    notification.innerHTML = `
+        <div class="notification-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    // Add notification styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 10001;
+            animation: slideInRight 0.3s ease;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .notification-success {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .notification-error {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .notification-info {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .notification-content {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+        @keyframes slideOutRight {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(100%); opacity: 0; }
+        }
+    `;
+    document.head.appendChild(style);
+    document.body.appendChild(notification);
+    
+    // Remove notification after 4 seconds
+    setTimeout(() => {
+        notification.style.animation = 'slideOutRight 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(notification);
+            document.head.removeChild(style);
+        }, 300);
+    }, 4000);
+}
+
+// Particle system
+function initializeParticleSystem() {
+    const heroParticles = document.querySelector('.hero-particles');
+    if (heroParticles) {
+        // Create additional particles
+        for (let i = 0; i < 20; i++) {
+            const particle = document.createElement('div');
+            particle.style.position = 'absolute';
+            particle.style.width = Math.random() * 4 + 2 + 'px';
+            particle.style.height = particle.style.width;
+            particle.style.background = `hsl(${Math.random() * 60 + 180}, 70%, 60%)`;
+            particle.style.borderRadius = '50%';
+            particle.style.left = Math.random() * 100 + '%';
+            particle.style.top = Math.random() * 100 + '%';
+            particle.style.animation = `particleFloat ${Math.random() * 10 + 10}s linear infinite`;
+            particle.style.opacity = Math.random() * 0.5 + 0.3;
+            
+            heroParticles.appendChild(particle);
+        }
+    }
+}
+
+// Scroll effects
+function initializeScrollEffects() {
+    let ticking = false;
+    
+    function updateScrollEffects() {
+        const scrolled = window.pageYOffset;
+        const parallax = document.querySelector('.hero-background');
+        
+        if (parallax) {
+            parallax.style.transform = `translateY(${scrolled * 0.5}px)`;
+        }
+        
+        // Update floating cards based on scroll
+        const floatingCards = document.querySelectorAll('.floating-card');
+        floatingCards.forEach((card, index) => {
+            const speed = 0.1 + (index * 0.05);
+            card.style.transform += ` translateY(${scrolled * speed}px)`;
+        });
+        
+        ticking = false;
+    }
+    
+    window.addEventListener('scroll', function() {
+        if (!ticking) {
+            requestAnimationFrame(updateScrollEffects);
+            ticking = true;
+        }
+    });
+}
+
+// Add smooth scrolling to all anchor links
+document.addEventListener('click', function(e) {
+    if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#')) {
+        e.preventDefault();
+        const targetId = e.target.getAttribute('href');
+        const targetElement = document.querySelector(targetId);
+        
+        if (targetElement) {
+            targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'start'
+            });
+        }
+    }
+});
+
+// Add loading animation
+window.addEventListener('load', function() {
+    document.body.classList.add('loaded');
+    
+    // Add loaded class styles
+    const style = document.createElement('style');
+    style.textContent = `
+        body {
+            opacity: 0;
+            transition: opacity 0.5s ease;
+        }
+        body.loaded {
+            opacity: 1;
+        }
+    `;
+    document.head.appendChild(style);
+});
+
+// Keyboard navigation
+document.addEventListener('keydown', function(e) {
+    // ESC key to close modals
+    if (e.key === 'Escape') {
+        const modals = document.querySelectorAll('.service-modal');
+        modals.forEach(modal => {
+            modal.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                if (modal.parentNode) {
+                    modal.parentNode.removeChild(modal);
+                }
+            }, 300);
+        });
+    }
+});
+
+// Performance optimization
+function debounce(func, wait) {
+    let timeout;
+    return function executedFunction(...args) {
+        const later = () => {
+            clearTimeout(timeout);
+            func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+    };
+}
+
+// Optimized scroll handler
+const optimizedScrollHandler = debounce(function() {
+    // Scroll-based animations and effects
+    const scrolled = window.pageYOffset;
+    const windowHeight = window.innerHeight;
+    
+    // Update header background based on scroll
+    const header = document.querySelector('.header');
+    if (header) {
+        if (scrolled > 100) {
+            header.style.background = 'rgba(10, 10, 10, 0.95)';
+        } else {
+            header.style.background = 'rgba(10, 10, 10, 0.9)';
+        }
+    }
+}, 10);
+
+window.addEventListener('scroll', optimizedScrollHandler);
+
+// Service card hover effects
+document.querySelectorAll('.service-card').forEach(card => {
+    card.addEventListener('mouseenter', function() {
+        this.style.transform = 'translateY(-15px) scale(1.02)';
+        this.style.boxShadow = '0 30px 80px rgba(0, 242, 254, 0.3)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+        this.style.transform = '';
+        this.style.boxShadow = '';
+    });
+});
+
+// Google Search functionality
+function initializeGoogleSearch() {
+    const searchInput = document.getElementById('googleSearch');
+    const searchSuggestions = document.getElementById('searchSuggestions');
+    
+    if (searchInput) {
+        // Search on Enter key press
+        searchInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performGoogleSearch();
+            }
+        });
+        
+        // Search suggestions on input
+        let searchTimeout;
+        searchInput.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(() => {
+                if (this.value.length > 2) {
+                    showSearchSuggestions(this.value);
+                } else {
+                    hideSearchSuggestions();
+                }
+            }, 300);
+        });
+        
+        // Hide suggestions when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!searchInput.contains(e.target) && !searchSuggestions.contains(e.target)) {
+                hideSearchSuggestions();
+            }
+        });
+    }
+}
+
+// Perform Google search
+function performGoogleSearch() {
+    const searchInput = document.getElementById('googleSearch');
+    const query = searchInput.value.trim();
+    
+    if (query) {
+        // Create Google search URL
+        const googleSearchUrl = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        
+        // Open in new tab
+        window.open(googleSearchUrl, '_blank');
+        
+        // Show success notification
+        showNotification(`Searching for "${query}" on Google...`, 'info');
+        
+        // Clear input
+        searchInput.value = '';
+        hideSearchSuggestions();
+    } else {
+        showNotification('Please enter a search term.', 'error');
+    }
+}
+
+// Show search suggestions
+function showSearchSuggestions(query) {
+    const searchSuggestions = document.getElementById('searchSuggestions');
+    if (!searchSuggestions) return;
+    
+    // Mock suggestions based on query
+    const suggestions = [
+        { icon: 'search', text: `Search for "${query}"` },
+        { icon: 'images', text: `Images of ${query}` },
+        { icon: 'video', text: `Videos of ${query}` },
+        { icon: 'news', text: `News about ${query}` },
+        { icon: 'map', text: `Maps for ${query}` }
+    ].filter(suggestion => 
+        suggestion.text.toLowerCase().includes(query.toLowerCase())
+    );
+    
+    if (suggestions.length > 0) {
+        searchSuggestions.innerHTML = suggestions.map(suggestion => 
+            `<div class="suggestion-item" onclick="selectSuggestion('${suggestion.text}')">
+                <i class="fas fa-${suggestion.icon} suggestion-icon"></i>
+                <span>${suggestion.text}</span>
+            </div>`
+        ).join('');
+        searchSuggestions.style.display = 'block';
+    } else {
+        searchSuggestions.style.display = 'none';
+    }
+}
+
+// Hide search suggestions
+function hideSearchSuggestions() {
+    const searchSuggestions = document.getElementById('searchSuggestions');
+    if (searchSuggestions) {
+        searchSuggestions.style.display = 'none';
+    }
+}
+
+// Select suggestion
+function selectSuggestion(suggestion) {
+    const searchInput = document.getElementById('googleSearch');
+    searchInput.value = suggestion;
+    hideSearchSuggestions();
+    performGoogleSearch();
+}
+
+// Sign In functionality
+function initializeSignIn() {
+    const signInBtn = document.querySelector('.btn-secondary');
+    if (signInBtn) {
+        signInBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            showSignInModal();
+        });
+    }
+}
+
+// Show Sign In modal
+function showSignInModal() {
+    const modal = document.createElement('div');
+    modal.className = 'signin-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div class="modal-logo">
+                        <div class="logo-icon">
+                            <div class="logo-circle">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                        </div>
+                        <span>JBN Services</span>
+                    </div>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="signin-content">
+                        <h3>Welcome Back!</h3>
+                        <p>Sign in to your JBN Services account</p>
+                        <form class="signin-form">
+                            <div class="form-group">
+                                <label for="email">Email Address</label>
+                                <input type="email" id="email" placeholder="Enter your email" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="password">Password</label>
+                                <input type="password" id="password" placeholder="Enter your password" required>
+                            </div>
+                            <div class="form-options">
+                                <label class="checkbox-label">
+                                    <input type="checkbox">
+                                    <span class="checkmark"></span>
+                                    Remember me
+                                </label>
+                                <a href="#" class="forgot-password">Forgot Password?</a>
+                            </div>
+                            <button type="submit" class="signin-btn">Sign In</button>
+                        </form>
+                        <div class="signin-divider">
+                            <span>or</span>
+                        </div>
+                        <div class="social-signin">
+                            <button class="social-btn google-btn">
+                                <i class="fab fa-google"></i>
+                                Continue with Google
+                            </button>
+                            <button class="social-btn facebook-btn">
+                                <i class="fab fa-facebook"></i>
+                                Continue with Facebook
+                            </button>
+                        </div>
+                        <div class="signup-link">
+                            <p>Don't have an account? <a href="#" class="signup-link-text">Sign up here</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Add modal styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .signin-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        .modal-content {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(30, 60, 114, 0.95) 100%);
+            border-radius: 25px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+        }
+        .modal-logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #ffffff;
+        }
+        .logo-icon {
+            position: relative;
+        }
+        .logo-circle {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
+        }
+        .logo-circle i {
+            font-size: 1.2rem;
+            color: white;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .close-modal:hover {
+            color: #00f2fe;
+            transform: scale(1.1);
+        }
+        .modal-body {
+            padding: 2rem;
+        }
+        .signin-content h3 {
+            color: #ffffff;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-align: center;
+        }
+        .signin-content p {
+            color: #b0b0b0;
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+        .signin-form {
+            margin-bottom: 2rem;
+        }
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        .form-group label {
+            display: block;
+            color: #ffffff;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        .form-group input:focus {
+            outline: none;
+            border-color: #00f2fe;
+            box-shadow: 0 0 20px rgba(0, 242, 254, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .form-group input::placeholder {
+            color: #b0b0b0;
+        }
+        .form-options {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+        .checkbox-label input[type="checkbox"] {
+            width: auto;
+            margin: 0;
+        }
+        .forgot-password {
+            color: #00f2fe;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        .forgot-password:hover {
+            color: #ffffff;
+        }
+        .signin-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .signin-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .signin-divider {
+            text-align: center;
+            margin: 2rem 0;
+            position: relative;
+        }
+        .signin-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: rgba(0, 242, 254, 0.3);
+        }
+        .signin-divider span {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(30, 60, 114, 0.95) 100%);
+            color: #b0b0b0;
+            padding: 0 1rem;
+            font-size: 0.9rem;
+        }
+        .social-signin {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            padding: 1rem;
+            border: 2px solid rgba(0, 242, 254, 0.3);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #ffffff;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1rem;
+        }
+        .social-btn:hover {
+            background: rgba(0, 242, 254, 0.1);
+            border-color: #00f2fe;
+            transform: translateY(-2px);
+        }
+        .google-btn:hover {
+            background: rgba(219, 68, 55, 0.1);
+            border-color: #db4437;
+        }
+        .facebook-btn:hover {
+            background: rgba(66, 103, 178, 0.1);
+            border-color: #4267b2;
+        }
+        .signup-link {
+            text-align: center;
+        }
+        .signup-link p {
+            color: #b0b0b0;
+            margin: 0;
+        }
+        .signup-link-text {
+            color: #00f2fe;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        .signup-link-text:hover {
+            color: #ffffff;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Form submission
+    const signinForm = modal.querySelector('.signin-form');
+    signinForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const email = modal.querySelector('#email').value;
+        const password = modal.querySelector('#password').value;
+        
+        if (email && password) {
+            // Extract name from email (part before @)
+            const userName = email.split('@')[0];
+            
+            // Store user data in localStorage
+            localStorage.setItem('jbnUser', JSON.stringify({
+                name: userName,
+                email: email,
+                isLoggedIn: true,
+                loginTime: new Date().toISOString()
+            }));
+            
+            // Update header with user info
+            updateHeaderForLoggedInUser(userName);
+            
+            showNotification(`Welcome back, ${userName}!`, 'success');
+            modal.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(modal);
+                document.head.removeChild(style);
+            }, 300);
+        } else {
+            showNotification('Please fill in all fields.', 'error');
+        }
+    });
+    
+    // Social login buttons
+    modal.querySelector('.google-btn').addEventListener('click', function() {
+        showNotification('Redirecting to Google...', 'info');
+        // Redirect to Gmail
+        setTimeout(() => {
+            window.open('https://mail.google.com', '_blank');
+        }, 1000);
+    });
+    
+    modal.querySelector('.facebook-btn').addEventListener('click', function() {
+        showNotification('Redirecting to Facebook...', 'info');
+        // Redirect to Facebook
+        setTimeout(() => {
+            window.open('https://www.facebook.com', '_blank');
+        }, 1000);
+    });
+    
+    // Close modal functionality
+    modal.querySelector('.close-modal').addEventListener('click', () => {
+        modal.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(modal);
+            document.head.removeChild(style);
+        }, 300);
+    });
+    
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            modal.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(modal);
+                document.head.removeChild(style);
+            }, 300);
+        }
+    });
+}
+
+// Check user login status on page load
+function checkUserLoginStatus() {
+    const userData = localStorage.getItem('jbnUser');
+    if (userData) {
+        const user = JSON.parse(userData);
+        if (user.isLoggedIn) {
+            updateHeaderForLoggedInUser(user.name);
+        }
+    }
+}
+
+// Update header for logged in user
+function updateHeaderForLoggedInUser(userName) {
+    const navActions = document.querySelector('.nav-actions');
+    if (navActions) {
+        navActions.innerHTML = `
+            <div class="user-profile">
+                <div class="user-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="user-info">
+                    <span class="user-name">${userName}</span>
+                    <span class="user-status">Online</span>
+                </div>
+                <div class="user-menu">
+                    <button class="profile-btn" onclick="showProfileMenu()">
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        // Add user profile styles
+        const style = document.createElement('style');
+        style.textContent = `
+            .user-profile {
+                display: flex;
+                align-items: center;
+                gap: 1rem;
+                background: rgba(0, 242, 254, 0.1);
+                padding: 0.5rem 1rem;
+                border-radius: 12px;
+                border: 1px solid rgba(0, 242, 254, 0.3);
+                transition: all 0.3s ease;
+            }
+            .user-profile:hover {
+                background: rgba(0, 242, 254, 0.2);
+                transform: translateY(-2px);
+            }
+            .user-avatar {
+                width: 40px;
+                height: 40px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                color: white;
+                font-size: 1.2rem;
+                box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+            }
+            .user-info {
+                display: flex;
+                flex-direction: column;
+                gap: 0.2rem;
+            }
+            .user-name {
+                color: #ffffff;
+                font-weight: 600;
+                font-size: 1rem;
+            }
+            .user-status {
+                color: #00f2fe;
+                font-size: 0.8rem;
+                font-weight: 500;
+            }
+            .user-menu {
+                position: relative;
+            }
+            .profile-btn {
+                background: none;
+                border: none;
+                color: #ffffff;
+                cursor: pointer;
+                padding: 0.5rem;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+            }
+            .profile-btn:hover {
+                background: rgba(255, 255, 255, 0.1);
+                color: #00f2fe;
+            }
+            .profile-dropdown {
+                position: absolute;
+                top: 100%;
+                right: 0;
+                background: rgba(10, 10, 10, 0.95);
+                backdrop-filter: blur(20px);
+                border: 1px solid rgba(0, 242, 254, 0.3);
+                border-radius: 12px;
+                padding: 1rem;
+                min-width: 200px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+                z-index: 1000;
+                display: none;
+            }
+            .profile-dropdown.show {
+                display: block;
+                animation: slideDown 0.3s ease;
+            }
+            .profile-dropdown-item {
+                display: flex;
+                align-items: center;
+                gap: 0.8rem;
+                padding: 0.8rem;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 8px;
+                transition: all 0.3s ease;
+                cursor: pointer;
+                margin-bottom: 0.5rem;
+            }
+            .profile-dropdown-item:hover {
+                background: rgba(0, 242, 254, 0.1);
+                color: #00f2fe;
+            }
+            .profile-dropdown-item:last-child {
+                margin-bottom: 0;
+                color: #ff6b6b;
+            }
+            .profile-dropdown-item:last-child:hover {
+                background: rgba(255, 107, 107, 0.1);
+                color: #ff6b6b;
+            }
+            @keyframes slideDown {
+                from { opacity: 0; transform: translateY(-10px); }
+                to { opacity: 1; transform: translateY(0); }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+}
+
+// Show profile menu
+function showProfileMenu() {
+    const existingDropdown = document.querySelector('.profile-dropdown');
+    if (existingDropdown) {
+        existingDropdown.remove();
+        return;
+    }
+    
+    const userData = JSON.parse(localStorage.getItem('jbnUser'));
+    const dropdown = document.createElement('div');
+    dropdown.className = 'profile-dropdown show';
+    dropdown.innerHTML = `
+        <div class="profile-dropdown-item" onclick="showUserProfile()">
+            <i class="fas fa-user"></i>
+            <span>My Profile</span>
+        </div>
+        <div class="profile-dropdown-item" onclick="showUserSettings()">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+        </div>
+        <div class="profile-dropdown-item" onclick="showUserHistory()">
+            <i class="fas fa-history"></i>
+            <span>Activity</span>
+        </div>
+        <div class="profile-dropdown-item" onclick="logoutUser()">
+            <i class="fas fa-sign-out-alt"></i>
+            <span>Sign Out</span>
+        </div>
+    `;
+    
+    const userMenu = document.querySelector('.user-menu');
+    userMenu.appendChild(dropdown);
+    
+    // Close dropdown when clicking outside
+    setTimeout(() => {
+        document.addEventListener('click', function closeDropdown(e) {
+            if (!userMenu.contains(e.target)) {
+                dropdown.remove();
+                document.removeEventListener('click', closeDropdown);
+            }
+        });
+    }, 100);
+}
+
+// User profile functions
+function showUserProfile() {
+    const userData = JSON.parse(localStorage.getItem('jbnUser'));
+    showNotification(`Profile: ${userData.name} (${userData.email})`, 'info');
+}
+
+function showUserSettings() {
+    showNotification('Settings panel coming soon!', 'info');
+}
+
+function showUserHistory() {
+    showNotification('Activity history coming soon!', 'info');
+}
+
+// Logout user
+function logoutUser() {
+    localStorage.removeItem('jbnUser');
+    showNotification('You have been signed out.', 'info');
+    
+    // Reset header to original state
+    const navActions = document.querySelector('.nav-actions');
+    navActions.innerHTML = `
+        <button class="btn-secondary">Sign In</button>
+        <button class="btn-primary">Get Started</button>
+    `;
+    
+    // Re-initialize sign in functionality
+    initializeSignIn();
+}
+
+// Initialize Telegram contact
+function initializeTelegramContact() {
+    const telegramContact = document.querySelector('.contact-method:has(.fab.fa-telegram)');
+    if (telegramContact) {
+        telegramContact.addEventListener('click', function(e) {
+            // Create click effect
+            createContactClickEffect(this, e);
+            
+            // Open Telegram
+            setTimeout(() => {
+                window.open('https://t.me/jbnservices', '_blank');
+                showNotification('Opening Telegram...', 'info');
+            }, 300);
+        });
+        
+        // Add cursor pointer
+        telegramContact.style.cursor = 'pointer';
+    }
+    
+    const githubContact = document.querySelector('.contact-method:has(.fab.fa-github)');
+    if (githubContact) {
+        githubContact.addEventListener('click', function(e) {
+            // Create click effect
+            createContactClickEffect(this, e);
+            
+            // Open GitHub
+            setTimeout(() => {
+                window.open('https://github.com/jbnservices', '_blank');
+                showNotification('Opening GitHub...', 'info');
+            }, 300);
+        });
+        
+        // Add cursor pointer
+        githubContact.style.cursor = 'pointer';
+    }
+    
+    // Add click effects to all contact methods
+    const allContactMethods = document.querySelectorAll('.contact-method');
+    allContactMethods.forEach(contact => {
+        contact.addEventListener('click', function(e) {
+            createContactClickEffect(this, e);
+        });
+    });
+}
+
+// Create contact click effect
+function createContactClickEffect(element, event) {
+    // Create ripple effect
+    const ripple = document.createElement('div');
+    const rect = element.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    const x = event.clientX - rect.left - size / 2;
+    const y = event.clientY - rect.top - size / 2;
+    
+    ripple.style.position = 'absolute';
+    ripple.style.width = ripple.style.height = size + 'px';
+    ripple.style.left = x + 'px';
+    ripple.style.top = y + 'px';
+    ripple.style.background = 'rgba(0, 242, 254, 0.3)';
+    ripple.style.borderRadius = '50%';
+    ripple.style.transform = 'scale(0)';
+    ripple.style.animation = 'contactRipple 0.6s ease-out';
+    ripple.style.pointerEvents = 'none';
+    ripple.style.zIndex = '10';
+    
+    // Add ripple animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes contactRipple {
+            0% {
+                transform: scale(0);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(2);
+                opacity: 0;
+            }
+        }
+        .contact-method {
+            position: relative;
+            overflow: hidden;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    element.style.position = 'relative';
+    element.style.overflow = 'hidden';
+    element.appendChild(ripple);
+    
+    // Add scale effect
+    element.style.transform = 'scale(0.95)';
+    element.style.transition = 'transform 0.1s ease';
+    
+    setTimeout(() => {
+        element.style.transform = 'scale(1)';
+        ripple.remove();
+        document.head.removeChild(style);
+    }, 100);
+}
+
+// Initialize global click effects
+function initializeGlobalClickEffects() {
+    // Add click effects to all clickable elements
+    document.addEventListener('click', function(e) {
+        // Skip if it's a form input or textarea
+        if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+            return;
+        }
+        
+        // Create small ripple effect
+        createGlobalClickEffect(e);
+    });
+}
+
+// Create global click effect
+function createGlobalClickEffect(event) {
+    // Create ripple element
+    const ripple = document.createElement('div');
+    ripple.className = 'global-ripple';
+    
+    // Set position and size
+    const size = 20; // Small size
+    ripple.style.position = 'fixed';
+    ripple.style.width = size + 'px';
+    ripple.style.height = size + 'px';
+    ripple.style.left = (event.clientX - size / 2) + 'px';
+    ripple.style.top = (event.clientY - size / 2) + 'px';
+    ripple.style.background = 'rgba(0, 242, 254, 0.4)';
+    ripple.style.borderRadius = '50%';
+    ripple.style.transform = 'scale(0)';
+    ripple.style.animation = 'globalRipple 0.4s ease-out';
+    ripple.style.pointerEvents = 'none';
+    ripple.style.zIndex = '9999';
+    
+    // Add global ripple animation styles
+    if (!document.querySelector('#global-ripple-styles')) {
+        const style = document.createElement('style');
+        style.id = 'global-ripple-styles';
+        style.textContent = `
+            @keyframes globalRipple {
+                0% {
+                    transform: scale(0);
+                    opacity: 1;
+                }
+                100% {
+                    transform: scale(3);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+    }
+    
+    document.body.appendChild(ripple);
+    
+    // Remove ripple after animation
+    setTimeout(() => {
+        if (ripple.parentNode) {
+            ripple.parentNode.removeChild(ripple);
+        }
+    }, 400);
+}
+
+// Add click effects to buttons
+document.querySelectorAll('.btn-primary, .btn-secondary, .service-btn').forEach(btn => {
+    btn.addEventListener('click', function(e) {
+        // Create ripple effect
+        const ripple = document.createElement('span');
+        const rect = this.getBoundingClientRect();
+        const size = Math.max(rect.width, rect.height);
+        const x = e.clientX - rect.left - size / 2;
+        const y = e.clientY - rect.top - size / 2;
+        
+        ripple.style.position = 'absolute';
+        ripple.style.width = ripple.style.height = size + 'px';
+        ripple.style.left = x + 'px';
+        ripple.style.top = y + 'px';
+        ripple.style.background = 'rgba(255, 255, 255, 0.3)';
+        ripple.style.borderRadius = '50%';
+        ripple.style.transform = 'scale(0)';
+        ripple.style.animation = 'ripple 0.6s linear';
+        ripple.style.pointerEvents = 'none';
+        
+        this.style.position = 'relative';
+        this.style.overflow = 'hidden';
+        this.appendChild(ripple);
+        
+        setTimeout(() => {
+            ripple.remove();
+        }, 600);
+    });
+});

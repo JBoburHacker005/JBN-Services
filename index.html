@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JBN Services</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3ClinearGradient id='grad' x1='0%25' y1='0%25' x2='100%25' y2='100%25'%3E%3Cstop offset='0%25' style='stop-color:%23667eea;stop-opacity:1' /%3E%3Cstop offset='100%25' style='stop-color:%23764ba2;stop-opacity:1' /%3E%3C/linearGradient%3E%3C/defs%3E%3Ccircle cx='50' cy='50' r='45' fill='url(%23grad)' stroke='%2300f2fe' stroke-width='3'/%3E%3Ctext x='50' y='60' font-family='Arial, sans-serif' font-size='32' font-weight='bold' text-anchor='middle' fill='white'%3EJBN%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="nav-container">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <div class="logo-circle">
+                            <i class="fas fa-bolt"></i>
+                        </div>
+                    </div>
+                    <span>JBN Services</span>
+                </div>
+                <nav class="nav-menu">
+                    <a href="#home" class="nav-link active">Home</a>
+                    <a href="#search" class="nav-link">Search</a>
+                    <a href="#services" class="nav-link">Services</a>
+                    <a href="#about" class="nav-link">About</a>
+                    <a href="#contact" class="nav-link">Contact</a>
+                </nav>
+                <div class="nav-actions">
+                    <button class="btn-secondary">Sign In</button>
+                    <button class="btn-primary">Get Started</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Hero Section -->
+        <section class="hero" id="home">
+            <div class="hero-background">
+                <div class="hero-particles"></div>
+                <div class="hero-grid"></div>
+            </div>
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Welcome to
+                    <span class="gradient-text">JBN Services</span>
+                </h1>
+                <p class="hero-description">
+                    Your complete digital platform for video, news, messaging, music, gaming, education, and more. 
+                    Experience the future of digital services in one unified ecosystem.
+                </p>
+                <div class="hero-actions">
+                    <button class="btn-primary btn-large">Explore Services</button>
+                    <button class="btn-secondary btn-large">Watch Demo</button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">12+</span>
+                        <span class="stat-label">Services</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">1M+</span>
+                        <span class="stat-label">Users</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">24/7</span>
+                        <span class="stat-label">Support</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-visual">
+                <div class="floating-cards">
+                    <div class="floating-card card-1">
+                        <div class="card-icon">
+                            <i class="fas fa-video"></i>
+                        </div>
+                        <span>JBN VIDEO</span>
+                    </div>
+                    <div class="floating-card card-2">
+                        <div class="card-icon">
+                            <i class="fas fa-newspaper"></i>
+                        </div>
+                        <span>JBN NEWS</span>
+                    </div>
+                    <div class="floating-card card-3">
+                        <div class="card-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <span>JBN MAIL</span>
+                    </div>
+                    <div class="floating-card card-4">
+                        <div class="card-icon">
+                            <i class="fas fa-comments"></i>
+                        </div>
+                        <span>JBN MESSENGER</span>
+                    </div>
+                    <div class="floating-card card-5">
+                        <div class="card-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <span>JBN MAP</span>
+                    </div>
+                    <div class="floating-card card-6">
+                        <div class="card-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <span>JBN GAMES</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Search Section -->
+        <section class="search-section" id="search">
+            <div class="search-container">
+                <div class="search-header">
+                    <h2>JBN Search</h2>
+                    <p>Find anything on the internet with our powerful search engine</p>
+                </div>
+                <div class="search-box-container">
+                    <div class="search-box">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" placeholder="Search anything on Google..." class="search-input" id="googleSearch">
+                        <button class="search-btn" onclick="performGoogleSearch()">Search</button>
+                    </div>
+                    <div class="search-suggestions" id="searchSuggestions"></div>
+                </div>
+                <div class="search-features">
+                    <div class="search-feature">
+                        <i class="fas fa-bolt"></i>
+                        <span>Lightning Fast</span>
+                    </div>
+                    <div class="search-feature">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>Secure Search</span>
+                    </div>
+                    <div class="search-feature">
+                        <i class="fas fa-globe"></i>
+                        <span>Global Results</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section class="services" id="services">
+            <div class="section-header">
+                <h2>Our Digital Services</h2>
+                <p>Complete ecosystem of digital services for all your needs</p>
+            </div>
+            <div class="services-grid">
+                <div class="service-card video-service">
+                    <div class="service-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <h3>JBN VIDEO</h3>
+                    <p>Stream, create, and share videos with our advanced video platform. High-quality streaming and editing tools.</p>
+                    <div class="service-features">
+                        <span>4K Streaming</span>
+                        <span>Live Broadcast</span>
+                        <span>Video Editing</span>
+                    </div>
+                    <button class="service-btn">Explore</button>
+                </div>
+
+                <div class="service-card news-service">
+                    <div class="service-icon">
+                        <i class="fas fa-newspaper"></i>
+                    </div>
+                    <h3>JBN NEWS</h3>
+                    <p>Stay informed with real-time news updates, breaking news alerts, and comprehensive coverage.</p>
+                    <div class="service-features">
+                        <span>Breaking News</span>
+                        <span>Global Coverage</span>
+                        <span>Real-time Updates</span>
+                    </div>
+                    <button class="service-btn">Read More</button>
+                </div>
+
+                <div class="service-card mail-service">
+                    <div class="service-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>JBN MAIL</h3>
+                    <p>Secure, fast, and intelligent email service with advanced features and privacy protection.</p>
+                    <div class="service-features">
+                        <span>Secure Email</span>
+                        <span>Smart Filters</span>
+                        <span>Privacy Focused</span>
+                    </div>
+                    <button class="service-btn">Get Started</button>
+                </div>
+
+                <div class="service-card messenger-service">
+                    <div class="service-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>JBN MESSENGER</h3>
+                    <p>Connect with friends and family through our secure messaging platform with end-to-end encryption.</p>
+                    <div class="service-features">
+                        <span>Secure Chat</span>
+                        <span>Group Messaging</span>
+                        <span>File Sharing</span>
+                    </div>
+                    <button class="service-btn">Start Chatting</button>
+                </div>
+
+                <div class="service-card map-service">
+                    <div class="service-icon">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </div>
+                    <h3>JBN MAP</h3>
+                    <p>Navigate the world with precision using our advanced mapping and location services.</p>
+                    <div class="service-features">
+                        <span>GPS Navigation</span>
+                        <span>Traffic Updates</span>
+                        <span>Local Discovery</span>
+                    </div>
+                    <button class="service-btn">Navigate</button>
+                </div>
+
+                <div class="service-card games-service">
+                    <div class="service-icon">
+                        <i class="fas fa-gamepad"></i>
+                    </div>
+                    <h3>JBN GAMES</h3>
+                    <p>Immerse yourself in our gaming universe with high-quality games and competitive tournaments.</p>
+                    <div class="service-features">
+                        <span>Multiplayer Games</span>
+                        <span>Tournaments</span>
+                        <span>Cloud Gaming</span>
+                    </div>
+                    <button class="service-btn">Play Now</button>
+                </div>
+
+                <div class="service-card market-service">
+                    <div class="service-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <h3>JBN MARKET</h3>
+                    <p>Shop with confidence in our secure marketplace with verified sellers and buyer protection.</p>
+                    <div class="service-features">
+                        <span>Secure Shopping</span>
+                        <span>Verified Sellers</span>
+                        <span>Buyer Protection</span>
+                    </div>
+                    <button class="service-btn">Shop Now</button>
+                </div>
+
+                <div class="service-card music-service">
+                    <div class="service-icon">
+                        <i class="fas fa-music"></i>
+                    </div>
+                    <h3>JBN MUSIC</h3>
+                    <p>Discover, stream, and create music with our comprehensive music platform and tools.</p>
+                    <div class="service-features">
+                        <span>Music Streaming</span>
+                        <span>Playlist Creation</span>
+                        <span>Music Discovery</span>
+                    </div>
+                    <button class="service-btn">Listen</button>
+                </div>
+
+                <div class="service-card edu-service">
+                    <div class="service-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3>JBN EDU</h3>
+                    <p>Learn and grow with our educational platform offering courses, certifications, and learning tools.</p>
+                    <div class="service-features">
+                        <span>Online Courses</span>
+                        <span>Certifications</span>
+                        <span>Learning Tools</span>
+                    </div>
+                    <button class="service-btn">Learn More</button>
+                </div>
+
+                <div class="service-card ai-service">
+                    <div class="service-icon">
+                        <i class="fas fa-brain"></i>
+                    </div>
+                    <h3>JBN AI</h3>
+                    <p>Experience the power of artificial intelligence with our AI-powered tools and services.</p>
+                    <div class="service-features">
+                        <span>AI Assistant</span>
+                        <span>Smart Automation</span>
+                        <span>Machine Learning</span>
+                    </div>
+                    <button class="service-btn">Explore AI</button>
+                </div>
+
+                <div class="service-card pay-service">
+                    <div class="service-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>JBN PAY</h3>
+                    <p>Secure digital payments and financial services with advanced encryption and fraud protection.</p>
+                    <div class="service-features">
+                        <span>Secure Payments</span>
+                        <span>Cryptocurrency</span>
+                        <span>Global Transfers</span>
+                    </div>
+                    <button class="service-btn">Pay Now</button>
+                </div>
+
+                <div class="service-card int-test-service">
+                    <div class="service-icon">
+                        <i class="fas fa-tachometer-alt"></i>
+                    </div>
+                    <h3>JBN INT TEST</h3>
+                    <p>Test your internet speed and connection quality with our advanced speed testing tools.</p>
+                    <div class="service-features">
+                        <span>Speed Test</span>
+                        <span>Connection Quality</span>
+                        <span>Network Analysis</span>
+                    </div>
+                    <button class="service-btn">Test Speed</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section class="about" id="about">
+            <div class="about-content">
+                <div class="about-text">
+                    <h2>About JBN Qidiruv</h2>
+                    <p>
+                        We're revolutionizing the way people search and discover information. 
+                        Our platform combines cutting-edge technology with user-friendly design 
+                        to deliver the most comprehensive search experience.
+                    </p>
+                    <p>
+                        Founded with the mission to make information accessible to everyone, 
+                        we've built a search engine that understands context, learns from user behavior, 
+                        and continuously improves to provide better results.
+                    </p>
+                    <div class="about-features">
+                        <div class="about-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Advanced AI Technology</span>
+                        </div>
+                        <div class="about-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Privacy-First Approach</span>
+                        </div>
+                        <div class="about-feature">
+                            <i class="fas fa-check"></i>
+                            <span>Global Infrastructure</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="about-visual">
+                    <div class="visual-card">
+                        <div class="visual-header">
+                            <h3>Our Technology</h3>
+                        </div>
+                        <div class="tech-stack">
+                            <div class="tech-item">
+                                <i class="fab fa-python"></i>
+                                <span>Python</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-js"></i>
+                                <span>JavaScript</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-java"></i>
+                                <span>Java</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-php"></i>
+                                <span>PHP</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-react"></i>
+                                <span>React</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-node-js"></i>
+                                <span>Node.js</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fas fa-database"></i>
+                                <span>Database</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fas fa-cloud"></i>
+                                <span>Cloud</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-apple"></i>
+                                <span>macOS</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-linux"></i>
+                                <span>Linux</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-windows"></i>
+                                <span>Windows</span>
+                            </div>
+                            <div class="tech-item">
+                                <i class="fab fa-docker"></i>
+                                <span>Docker</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section class="contact" id="contact">
+            <div class="contact-content">
+                <div class="contact-info">
+                    <h2>Get in Touch</h2>
+                    <p>Have questions or want to learn more? We'd love to hear from you.</p>
+                    <div class="contact-methods">
+                        <div class="contact-method">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>jbobur005@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Phone</h4>
+                                <p>+998 (93) 005-42-87</p>
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fab fa-telegram"></i>
+                            <div>
+                                <h4>Telegram</h4>
+                                <p>Jovliyev_Bobur</p>
+                            </div>
+                        </div>
+                        <div class="contact-method">
+                            <i class="fab fa-github"></i>
+                            <div>
+                                <h4>GitHub</h4>
+                                <p>github.com/JBoburHacker005</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form class="form">
+                        <div class="form-group">
+                            <input type="text" placeholder="Your Name" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <input type="email" placeholder="Your Email" class="form-input">
+                        </div>
+                        <div class="form-group">
+                            <textarea placeholder="Your Message" class="form-textarea"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary form-submit">Send Message</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-search"></i>
+                        <span>JBN Qidiruv</span>
+                    </div>
+                    <p>Making search simple, fast, and intelligent.</p>
+                    <div class="social-links">
+                        <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-facebook"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" class="social-link"><i class="fab fa-github"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Product</h4>
+                    <ul>
+                        <li><a href="#">Features</a></li>
+                        <li><a href="#">Pricing</a></li>
+                        <li><a href="#">API</a></li>
+                        <li><a href="#">Documentation</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <ul>
+                        <li><a href="#">About</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Press</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Status</a></li>
+                        <li><a href="#">Community</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 JBN Qidiruv. All rights reserved.</p>
+                <div class="footer-links">
+                    <a href="#">Privacy Policy</a>
+                    <a href="#">Terms of Service</a>
+                    <a href="#">Cookies</a>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
