@@ -14,6 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeTelegramContact();
     initializeGlobalClickEffects();
     initializeTechnologyCards();
+    initializeLiveClock();
+    initializeWeather();
 });
 
 // Navigation functionality
@@ -1994,3 +1996,72 @@ document.querySelectorAll('.btn-primary, .btn-secondary, .service-btn').forEach(
         }, 600);
     });
 });
+
+// Live Clock functionality
+function initializeLiveClock() {
+    const timeElement = document.getElementById('header-time');
+    if (!timeElement) return;
+    
+    function updateTime() {
+        const now = new Date();
+        const timeString = now.toLocaleTimeString('en-US', {
+            hour12: false,
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit'
+        });
+        timeElement.textContent = timeString;
+    }
+    
+    // Update immediately and then every second
+    updateTime();
+    setInterval(updateTime, 1000);
+}
+
+// Weather functionality
+function initializeWeather() {
+    const tempElement = document.getElementById('header-weather-temp');
+    const descElement = document.getElementById('header-weather-desc');
+    
+    if (!tempElement || !descElement) return;
+    
+    // Default location (Tashkent, Uzbekistan)
+    const lat = 41.2995;
+    const lon = 69.2401;
+    
+    // OpenWeatherMap API (free tier)
+    const apiKey = 'demo'; // In production, use a real API key
+    const apiUrl = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+    
+    // Fallback weather data (since we don't have a real API key)
+    function showFallbackWeather() {
+        const weatherData = [
+            { temp: '22°C', desc: 'Sunny' },
+            { temp: '18°C', desc: 'Cloudy' },
+            { temp: '25°C', desc: 'Clear' },
+            { temp: '20°C', desc: 'Partly Cloudy' }
+        ];
+        
+        const randomWeather = weatherData[Math.floor(Math.random() * weatherData.length)];
+        tempElement.textContent = randomWeather.temp;
+        descElement.textContent = randomWeather.desc;
+    }
+    
+    // Try to fetch real weather data
+    fetch(apiUrl)
+        .then(response => {
+            if (!response.ok) throw new Error('API Error');
+            return response.json();
+        })
+        .then(data => {
+            tempElement.textContent = `${Math.round(data.main.temp)}°C`;
+            descElement.textContent = data.weather[0].description;
+        })
+        .catch(error => {
+            console.log('Using fallback weather data');
+            showFallbackWeather();
+        });
+    
+    // Update weather every 10 minutes
+    setInterval(showFallbackWeather, 600000);
+}
