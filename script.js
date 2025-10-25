@@ -13,6 +13,7 @@ document.addEventListener('DOMContentLoaded', function() {
     checkUserLoginStatus();
     initializeTelegramContact();
     initializeGlobalClickEffects();
+    initializeTechnologyCards();
 });
 
 // Navigation functionality
@@ -116,6 +117,13 @@ function initializeServiceCards() {
             this.style.transform = '';
             this.style.boxShadow = '';
         });
+        
+        // Add click event to navigate to sections
+        card.addEventListener('click', function(e) {
+            e.preventDefault();
+            const serviceName = this.querySelector('h3').textContent;
+            navigateToServiceSection(serviceName);
+        });
     });
     
     serviceBtns.forEach(btn => {
@@ -127,8 +135,47 @@ function initializeServiceCards() {
     });
 }
 
+// Navigate to service sections
+function navigateToServiceSection(serviceName) {
+    const serviceUrls = {
+        'JBN VIDEO': 'https://youtube.com',
+        'JBN NEWS': 'https://kun.uz', 
+        'JBN MAIL': 'https://gmail.com',
+        'JBN MESSENGER': 'https://telegram.org',
+        'JBN MAP': 'https://maps.google.com',
+        'JBN GAMES': 'https://yandex.com/games',
+        'JBN MARKET': 'https://uzum.uz',
+        'JBN MUSIC': 'https://music.yandex.com',
+        'JBN EDU': 'https://ibratacademy.uz',
+        'JBN AI': 'https://chat.openai.com',
+        'JBN PAY': 'https://click.uz',
+        'JBN INT TEST': 'https://fast.com'
+    };
+    
+    const targetUrl = serviceUrls[serviceName];
+    if (targetUrl) {
+        if (targetUrl.startsWith('#')) {
+            // Internal navigation
+            const element = document.querySelector(targetUrl);
+            if (element) {
+                element.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+                showNotification(`Navigating to ${serviceName}...`, 'info');
+            }
+        } else {
+            // External navigation
+            window.open(targetUrl, '_blank');
+            showNotification(`Opening ${serviceName}...`, 'info');
+        }
+    }
+}
+
 // Service modal functionality
 function showServiceModal(serviceName) {
+    const serviceInfo = getServiceInfo(serviceName);
+    
     const modal = document.createElement('div');
     modal.className = 'service-modal';
     modal.innerHTML = `
@@ -144,18 +191,16 @@ function showServiceModal(serviceName) {
                             <i class="fas fa-${getServiceIcon(serviceName)}"></i>
                         </div>
                         <div class="preview-content">
-                            <h4>Coming Soon!</h4>
-                            <p>This service is currently under development. Stay tuned for updates!</p>
+                            <h4>${serviceInfo.title}</h4>
+                            <p>${serviceInfo.description}</p>
                             <div class="preview-features">
-                                <span>Advanced Features</span>
-                                <span>AI Integration</span>
-                                <span>Mobile Support</span>
+                                ${serviceInfo.features.map(feature => `<span>${feature}</span>`).join('')}
                             </div>
                         </div>
                     </div>
                     <div class="modal-actions">
-                        <button class="btn-primary">Get Notified</button>
-                        <button class="btn-secondary">Learn More</button>
+                        <button class="btn-primary" onclick="openService('${serviceName}')">Open Service</button>
+                        <button class="btn-secondary" onclick="closeModal()">Close</button>
                     </div>
                 </div>
             </div>
@@ -341,6 +386,78 @@ function getServiceIcon(serviceName) {
         'JBN INT TEST': 'tachometer-alt'
     };
     return iconMap[serviceName] || 'star';
+}
+
+// Get detailed service information
+function getServiceInfo(serviceName) {
+    const serviceData = {
+        'JBN VIDEO': {
+            title: 'Video Platform',
+            description: 'Access YouTube - the world\'s largest video sharing platform with millions of videos, live streams, and educational content.',
+            features: ['Video Streaming', 'Live Broadcasts', 'Educational Content', 'Entertainment']
+        },
+        'JBN NEWS': {
+            title: 'News Portal',
+            description: 'Stay updated with the latest news from Kun.uz - Uzbekistan\'s leading news website covering politics, economy, and society.',
+            features: ['Latest News', 'Political Updates', 'Economic News', 'Social Issues']
+        },
+        'JBN MAIL': {
+            title: 'Email Service',
+            description: 'Access Gmail - Google\'s powerful email service with 15GB of free storage and advanced features.',
+            features: ['15GB Storage', 'Spam Protection', 'Mobile Sync', 'Advanced Search']
+        },
+        'JBN MESSENGER': {
+            title: 'Messaging App',
+            description: 'Connect with Telegram - a secure messaging app with end-to-end encryption and cloud storage.',
+            features: ['Secure Messaging', 'File Sharing', 'Group Chats', 'Voice Calls']
+        },
+        'JBN MAP': {
+            title: 'Navigation Service',
+            description: 'Navigate with Google Maps - the world\'s most comprehensive mapping service with real-time traffic.',
+            features: ['GPS Navigation', 'Real-time Traffic', 'Street View', 'Local Discovery']
+        },
+        'JBN GAMES': {
+            title: 'Gaming Platform',
+            description: 'Play games on Yandex Games - a collection of free online games and browser-based entertainment.',
+            features: ['Free Games', 'Browser Gaming', 'Multiplayer', 'No Download Required']
+        },
+        'JBN MARKET': {
+            title: 'E-commerce Platform',
+            description: 'Shop on Uzum.uz - Uzbekistan\'s leading online marketplace with millions of products.',
+            features: ['Wide Product Range', 'Secure Payments', 'Fast Delivery', 'Customer Support']
+        },
+        'JBN MUSIC': {
+            title: 'Music Streaming',
+            description: 'Listen to music on Yandex Music - a music streaming service with millions of songs and playlists.',
+            features: ['Music Streaming', 'Playlists', 'Offline Mode', 'High Quality Audio']
+        },
+        'JBN EDU': {
+            title: 'Educational Platform',
+            description: 'Learn on Ibrat Academy - Uzbekistan\'s premier online education platform with courses and certifications.',
+            features: ['Online Courses', 'Certifications', 'Expert Instructors', 'Flexible Learning']
+        },
+        'JBN AI': {
+            title: 'AI Assistant',
+            description: 'Chat with ChatGPT - OpenAI\'s advanced AI assistant for conversations, writing, and problem-solving.',
+            features: ['AI Conversations', 'Text Generation', 'Problem Solving', 'Creative Writing']
+        },
+        'JBN PAY': {
+            title: 'Payment System',
+            description: 'Make payments with Click.uz - Uzbekistan\'s leading digital payment platform for online transactions.',
+            features: ['Secure Payments', 'Mobile Banking', 'Bill Payments', 'Money Transfer']
+        },
+        'JBN INT TEST': {
+            title: 'Speed Test',
+            description: 'Test your internet speed with Fast.com - Netflix\'s internet speed testing service.',
+            features: ['Speed Testing', 'Real-time Results', 'No Ads', 'Accurate Measurements']
+        }
+    };
+    
+    return serviceData[serviceName] || {
+        title: 'Service Information',
+        description: 'This service provides essential functionality for your digital needs.',
+        features: ['Advanced Features', 'User Friendly', 'Secure', 'Reliable']
+    };
 }
 
 // Initialize animations
@@ -1329,10 +1446,10 @@ function initializeTelegramContact() {
             // Create click effect
             createContactClickEffect(this, e);
             
-            // Open Telegram
+            // Open Telegram with username
             setTimeout(() => {
-                window.open('https://t.me/jbnservices', '_blank');
-                showNotification('Opening Telegram...', 'info');
+                window.open('https://t.me/Jovliyev_Bobur', '_blank');
+                showNotification('Opening Telegram profile...', 'info');
             }, 300);
         });
         
@@ -1346,15 +1463,75 @@ function initializeTelegramContact() {
             // Create click effect
             createContactClickEffect(this, e);
             
-            // Open GitHub
+            // Open GitHub profile
             setTimeout(() => {
-                window.open('https://github.com/jbnservices', '_blank');
-                showNotification('Opening GitHub...', 'info');
+                window.open('https://github.com/JBoburHacker005', '_blank');
+                showNotification('Opening GitHub profile...', 'info');
             }, 300);
         });
         
         // Add cursor pointer
         githubContact.style.cursor = 'pointer';
+    }
+    
+    const linkedinContact = document.querySelector('.linkedin-contact');
+    if (linkedinContact) {
+        linkedinContact.addEventListener('click', function(e) {
+            // Create click effect
+            createContactClickEffect(this, e);
+            
+            // Open LinkedIn profile
+            setTimeout(() => {
+                window.open('https://linkedin.com/in/Bobur005', '_blank');
+                showNotification('Opening LinkedIn profile...', 'info');
+            }, 300);
+        });
+        
+        // Add cursor pointer
+        linkedinContact.style.cursor = 'pointer';
+    }
+    
+    const instagramContact = document.querySelector('.instagram-contact');
+    if (instagramContact) {
+        instagramContact.addEventListener('click', function(e) {
+            // Create click effect
+            createContactClickEffect(this, e);
+            
+            // Open Instagram profile
+            setTimeout(() => {
+                window.open('https://instagram.com/j.bobur005', '_blank');
+                showNotification('Opening Instagram profile...', 'info');
+            }, 300);
+        });
+        
+        // Add cursor pointer
+        instagramContact.style.cursor = 'pointer';
+    }
+    
+    // Email contact
+    const emailContact = document.querySelector('.contact-method:has(.fas.fa-envelope)');
+    if (emailContact) {
+        emailContact.addEventListener('click', function(e) {
+            createContactClickEffect(this, e);
+            setTimeout(() => {
+                window.open('mailto:jbobur005@gmail.com', '_blank');
+                showNotification('Opening email client...', 'info');
+            }, 300);
+        });
+        emailContact.style.cursor = 'pointer';
+    }
+    
+    // Phone contact
+    const phoneContact = document.querySelector('.contact-method:has(.fas.fa-phone)');
+    if (phoneContact) {
+        phoneContact.addEventListener('click', function(e) {
+            createContactClickEffect(this, e);
+            setTimeout(() => {
+                window.open('tel:+998930054287', '_blank');
+                showNotification('Opening phone dialer...', 'info');
+            }, 300);
+        });
+        phoneContact.style.cursor = 'pointer';
     }
     
     // Add click effects to all contact methods
@@ -1482,6 +1659,310 @@ function createGlobalClickEffect(event) {
             ripple.parentNode.removeChild(ripple);
         }
     }, 400);
+}
+
+// Open service function
+function openService(serviceName) {
+    navigateToServiceSection(serviceName);
+    closeModal();
+}
+
+// Close modal function
+function closeModal() {
+    const modal = document.querySelector('.service-modal');
+    if (modal) {
+        modal.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            if (modal.parentNode) {
+                modal.parentNode.removeChild(modal);
+            }
+        }, 300);
+    }
+}
+
+// Initialize technology cards
+function initializeTechnologyCards() {
+    const techItems = document.querySelectorAll('.tech-item');
+    
+    techItems.forEach(item => {
+        item.addEventListener('click', function() {
+            const techName = this.querySelector('span').textContent;
+            showTechnologyModal(techName);
+        });
+    });
+}
+
+// Show technology modal
+function showTechnologyModal(techName) {
+    const techInfo = getTechnologyInfo(techName);
+    
+    const modal = document.createElement('div');
+    modal.className = 'service-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${techName}</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="service-preview">
+                        <div class="preview-icon">
+                            <i class="fab fa-${getTechnologyIcon(techName)}"></i>
+                        </div>
+                        <div class="preview-content">
+                            <h4>${techInfo.title}</h4>
+                            <p>${techInfo.description}</p>
+                            <div class="preview-features">
+                                ${techInfo.features.map(feature => `<span>${feature}</span>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-primary" onclick="closeModal()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Add modal styles (reuse existing styles)
+    const style = document.createElement('style');
+    style.textContent = `
+        .service-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        .modal-content {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.9) 0%, rgba(30, 60, 114, 0.9) 100%);
+            border-radius: 25px;
+            max-width: 600px;
+            width: 100%;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+        }
+        .modal-header h3 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .close-modal:hover {
+            color: #00f2fe;
+            transform: scale(1.1);
+        }
+        .modal-body {
+            padding: 2rem;
+        }
+        .service-preview {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .preview-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        .preview-content h4 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .preview-content p {
+            color: #b0b0b0;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .preview-features {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        .preview-features span {
+            background: rgba(0, 242, 254, 0.1);
+            color: #00f2fe;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+        }
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+        .modal-actions .btn-primary {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Close modal functionality
+    modal.querySelector('.close-modal').addEventListener('click', () => {
+        modal.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            document.body.removeChild(modal);
+            document.head.removeChild(style);
+        }, 300);
+    });
+    
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            modal.style.animation = 'fadeOut 0.3s ease';
+            setTimeout(() => {
+                document.body.removeChild(modal);
+                document.head.removeChild(style);
+            }, 300);
+        }
+    });
+}
+
+// Get technology icon
+function getTechnologyIcon(techName) {
+    const iconMap = {
+        'Python': 'python',
+        'JavaScript': 'js',
+        'Java': 'java',
+        'PHP': 'php',
+        'React': 'react',
+        'Node.js': 'node-js',
+        'Database': 'database',
+        'Cloud': 'cloud',
+        'macOS': 'apple',
+        'Linux': 'linux',
+        'Windows': 'windows',
+        'Docker': 'docker'
+    };
+    return iconMap[techName] || 'code';
+}
+
+// Get technology information
+function getTechnologyInfo(techName) {
+    const techData = {
+        'Python': {
+            title: 'Python Programming',
+            description: 'A versatile, high-level programming language known for its simplicity and readability. Widely used in web development, data science, AI, and automation.',
+            features: ['Easy to Learn', 'Data Science', 'Web Development', 'AI/ML']
+        },
+        'JavaScript': {
+            title: 'JavaScript Development',
+            description: 'The language of the web! JavaScript powers interactive websites and modern web applications. Essential for frontend and full-stack development.',
+            features: ['Web Development', 'Frontend Frameworks', 'Node.js Backend', 'Real-time Apps']
+        },
+        'Java': {
+            title: 'Java Programming',
+            description: 'A robust, object-oriented programming language used for enterprise applications, Android development, and large-scale systems.',
+            features: ['Enterprise Apps', 'Android Development', 'Cross-platform', 'High Performance']
+        },
+        'PHP': {
+            title: 'PHP Development',
+            description: 'A server-side scripting language designed for web development. Powers many popular websites and content management systems.',
+            features: ['Web Development', 'WordPress', 'E-commerce', 'Server-side Logic']
+        },
+        'React': {
+            title: 'React Framework',
+            description: 'A powerful JavaScript library for building user interfaces. Created by Facebook, it\'s widely used for creating interactive web applications.',
+            features: ['Component-based', 'Virtual DOM', 'Hooks', 'Ecosystem']
+        },
+        'Node.js': {
+            title: 'Node.js Runtime',
+            description: 'A JavaScript runtime built on Chrome\'s V8 engine. Enables server-side JavaScript development and real-time applications.',
+            features: ['Server-side JS', 'Real-time Apps', 'NPM Ecosystem', 'Scalable']
+        },
+        'Database': {
+            title: 'Database Management',
+            description: 'Expertise in database design, optimization, and management. Experience with SQL and NoSQL databases for various applications.',
+            features: ['SQL/NoSQL', 'Data Modeling', 'Performance Tuning', 'Backup & Recovery']
+        },
+        'Cloud': {
+            title: 'Cloud Computing',
+            description: 'Experience with cloud platforms and services for scalable, reliable, and cost-effective application deployment and management.',
+            features: ['AWS/Azure/GCP', 'Scalability', 'DevOps', 'Microservices']
+        },
+        'macOS': {
+            title: 'macOS Development',
+            description: 'Proficient in macOS development and optimization. Experience with Apple ecosystem and native application development.',
+            features: ['Native Apps', 'Apple Ecosystem', 'Performance', 'User Experience']
+        },
+        'Linux': {
+            title: 'Linux Administration',
+            description: 'Expertise in Linux system administration, server management, and command-line operations for robust server environments.',
+            features: ['System Admin', 'Server Management', 'Command Line', 'Security']
+        },
+        'Windows': {
+            title: 'Windows Development',
+            description: 'Experience with Windows platform development, system administration, and enterprise solutions for Windows environments.',
+            features: ['Windows Apps', 'Enterprise Solutions', 'System Admin', 'Integration']
+        },
+        'Docker': {
+            title: 'Containerization',
+            description: 'Expertise in Docker containerization for application deployment, scaling, and management in modern development workflows.',
+            features: ['Containerization', 'DevOps', 'Microservices', 'Scalability']
+        }
+    };
+    
+    return techData[techName] || {
+        title: 'Technology',
+        description: 'This technology is part of our comprehensive tech stack.',
+        features: ['Modern', 'Reliable', 'Scalable', 'Efficient']
+    };
 }
 
 // Add click effects to buttons

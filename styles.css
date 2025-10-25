@@ -454,11 +454,41 @@ body::before {
     z-index: 2;
 }
 
+.search-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.logo-icon {
+    width: 60px;
+    height: 60px;
+    background: var(--primary-gradient);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    animation: logoPulse 2s ease-in-out infinite;
+}
+
+.logo-icon i {
+    font-size: 1.8rem;
+    color: white;
+}
+
+@keyframes logoPulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+}
+
 .search-header h2 {
     font-size: 3rem;
     font-weight: 800;
     color: var(--text-primary);
-    margin-bottom: 1rem;
+    margin: 0;
     background: var(--accent-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -664,6 +694,7 @@ body::before {
     transition: all 0.4s ease;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 .service-card::before {
@@ -915,6 +946,7 @@ body::before {
     border-radius: 15px;
     border: 1px solid var(--border-glow);
     transition: all 0.3s ease;
+    cursor: pointer;
 }
 
 .tech-item:hover {
@@ -1067,7 +1099,9 @@ body::before {
 }
 
 .contact-methods {
-    space-y: 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
 }
 
 .contact-method {
@@ -1080,6 +1114,8 @@ body::before {
     border-radius: 15px;
     border: 1px solid var(--border-glow);
     transition: all 0.3s ease;
+    min-height: 80px;
+    flex: 1;
 }
 
 .contact-method:hover {
@@ -1112,17 +1148,52 @@ body::before {
     box-shadow: 0 15px 40px rgba(51, 51, 51, 0.4);
 }
 
+.contact-method:has(.fab.fa-linkedin):hover i {
+    background: linear-gradient(135deg, #0077b5 0%, #005885 100%);
+    box-shadow: 0 15px 40px rgba(0, 119, 181, 0.4);
+}
+
+.contact-method:has(.fab.fa-instagram):hover i {
+    background: linear-gradient(135deg, #E4405F 0%, #C13584 100%);
+    box-shadow: 0 15px 40px rgba(196, 53, 132, 0.4);
+}
+
+.linkedin-section {
+    margin-top: 2rem;
+}
+
+.linkedin-contact {
+    cursor: pointer;
+}
+
+/* Responsive design for contact methods */
+@media (max-width: 768px) {
+    .contact-methods {
+        grid-template-columns: 1fr;
+    }
+}
+
 .contact-method h4 {
     font-weight: 600;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
     font-size: 1.2rem;
+    flex-shrink: 0;
+}
+
+.contact-method > div {
+    flex: 1;
+    min-width: 0;
 }
 
 .contact-method p {
     color: var(--text-secondary);
     margin: 0;
     font-size: 1.1rem;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    line-height: 1.4;
 }
 
 .contact-form {
