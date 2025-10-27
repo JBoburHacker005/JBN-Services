@@ -12,6 +12,14 @@
     {
       "src": "script.js",
       "use": "@vercel/static"
+    },
+    {
+      "src": "Airbrush-Image-Enhancer-1761540581476-Photoroom.png",
+      "use": "@vercel/static"
+    },
+    {
+      "src": "Sertifikat/**",
+      "use": "@vercel/static"
     }
   ],
   "routes": [
@@ -22,6 +30,14 @@
     {
       "src": "/script.js",
       "dest": "/script.js"
+    },
+    {
+      "src": "/Airbrush-Image-Enhancer-1761540581476-Photoroom.png",
+      "dest": "/Airbrush-Image-Enhancer-1761540581476-Photoroom.png"
+    },
+    {
+      "src": "/Sertifikat/(.*)",
+      "dest": "/Sertifikat/$1"
     },
     {
       "src": "/(.*)",
