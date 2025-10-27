@@ -79,7 +79,7 @@ function initializeFloatingCards() {
             this.style.zIndex = '';
         });
         
-        // Add click effects
+        // Add click effects and navigation
         card.addEventListener('click', function() {
             // Create ripple effect
             const ripple = document.createElement('div');
@@ -100,7 +100,16 @@ function initializeFloatingCards() {
             setTimeout(() => {
                 ripple.remove();
             }, 600);
+            
+            // Get service name from card text
+            const serviceName = this.querySelector('span').textContent.trim();
+            
+            // Navigate to the service
+            navigateToServiceSection(serviceName);
         });
+        
+        // Add cursor pointer to indicate clickability
+        card.style.cursor = 'pointer';
     });
 }
 
@@ -171,6 +180,9 @@ function navigateToServiceSection(serviceName) {
             window.open(targetUrl, '_blank');
             showNotification(`Opening ${serviceName}...`, 'info');
         }
+    } else {
+        // Fallback for unknown services
+        showNotification(`Service ${serviceName} not found.`, 'error');
     }
 }
 
