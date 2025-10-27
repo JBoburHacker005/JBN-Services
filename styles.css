@@ -189,6 +189,19 @@ body::before {
     color: white;
 }
 
+.logo-image {
+    width: 50px;
+    height: 50px;
+    object-fit: contain;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.logo-image:hover {
+    transform: scale(1.05);
+    filter: brightness(1.1);
+}
+
 .nav-menu {
     display: flex;
     gap: 2rem;
