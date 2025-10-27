@@ -2018,6 +2018,301 @@ function initializeLiveClock() {
     setInterval(updateTime, 1000);
 }
 
+// Certificate opening functionality
+function openCertificate(pdfPath, certificateName) {
+    try {
+        // Try to open the PDF in a new tab
+        const newWindow = window.open(pdfPath, '_blank');
+        
+        if (newWindow) {
+            // Success - show notification
+            showNotification(`Opening ${certificateName} certificate...`, 'success');
+            
+            // Add click effect to the certificate card
+            const clickedCard = event.currentTarget;
+            createCertificateClickEffect(clickedCard);
+        } else {
+            // Popup was blocked - try alternative method
+            showCertificateModal(pdfPath, certificateName);
+        }
+    } catch (error) {
+        console.error('Error opening certificate:', error);
+        // Fallback to modal
+        showCertificateModal(pdfPath, certificateName);
+    }
+}
+
+// Show certificate in modal if popup is blocked
+function showCertificateModal(pdfPath, certificateName) {
+    const modal = document.createElement('div');
+    modal.className = 'certificate-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${certificateName}</h3>
+                    <button class="close-modal">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <div class="certificate-preview">
+                        <div class="certificate-icon">
+                            <i class="fas fa-certificate"></i>
+                        </div>
+                        <div class="certificate-info">
+                            <h4>${certificateName}</h4>
+                            <p>Click the button below to view or download the certificate PDF.</p>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button class="btn-primary" onclick="downloadCertificate('${pdfPath}', '${certificateName}')">
+                            <i class="fas fa-download"></i>
+                            Download PDF
+                        </button>
+                        <button class="btn-secondary" onclick="tryOpenCertificate('${pdfPath}', '${certificateName}')">
+                            <i class="fas fa-external-link-alt"></i>
+                            Try Opening Again
+                        </button>
+                        <button class="btn-secondary" onclick="closeCertificateModal()">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Add modal styles
+    const style = document.createElement('style');
+    style.textContent = `
+        .certificate-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+        .modal-overlay {
+            background: rgba(0, 0, 0, 0.8);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+        .modal-content {
+            background: linear-gradient(135deg, rgba(10, 10, 10, 0.95) 0%, rgba(30, 60, 114, 0.95) 100%);
+            border-radius: 25px;
+            max-width: 500px;
+            width: 100%;
+            border: 1px solid rgba(0, 242, 254, 0.3);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.3s ease;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 2rem 2rem 1rem;
+            border-bottom: 1px solid rgba(0, 242, 254, 0.2);
+        }
+        .modal-header h3 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+        .close-modal:hover {
+            color: #00f2fe;
+            transform: scale(1.1);
+        }
+        .modal-body {
+            padding: 2rem;
+        }
+        .certificate-preview {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        .certificate-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        .certificate-info h4 {
+            color: #ffffff;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+        .certificate-info p {
+            color: #b0b0b0;
+            margin-bottom: 1rem;
+            line-height: 1.6;
+        }
+        .modal-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .modal-actions .btn-primary,
+        .modal-actions .btn-secondary {
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        .modal-actions .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .modal-actions .btn-secondary {
+            background: transparent;
+            color: #00f2fe;
+            border: 2px solid #00f2fe;
+        }
+        .modal-actions .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .modal-actions .btn-secondary:hover {
+            background: rgba(0, 242, 254, 0.1);
+            transform: translateY(-2px);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideUp {
+            from { transform: translateY(50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // Close modal functionality
+    modal.querySelector('.close-modal').addEventListener('click', () => {
+        closeCertificateModal();
+    });
+    
+    modal.querySelector('.modal-overlay').addEventListener('click', (e) => {
+        if (e.target === e.currentTarget) {
+            closeCertificateModal();
+        }
+    });
+}
+
+// Download certificate function
+function downloadCertificate(pdfPath, certificateName) {
+    try {
+        const link = document.createElement('a');
+        link.href = pdfPath;
+        link.download = `${certificateName}.pdf`;
+        link.target = '_blank';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        showNotification(`Downloading ${certificateName} certificate...`, 'success');
+        closeCertificateModal();
+    } catch (error) {
+        console.error('Error downloading certificate:', error);
+        showNotification('Error downloading certificate. Please try again.', 'error');
+    }
+}
+
+// Try opening certificate again
+function tryOpenCertificate(pdfPath, certificateName) {
+    closeCertificateModal();
+    openCertificate(pdfPath, certificateName);
+}
+
+// Close certificate modal
+function closeCertificateModal() {
+    const modal = document.querySelector('.certificate-modal');
+    if (modal) {
+        modal.style.animation = 'fadeOut 0.3s ease';
+        setTimeout(() => {
+            if (modal.parentNode) {
+                modal.parentNode.removeChild(modal);
+            }
+        }, 300);
+    }
+}
+
+// Create click effect for certificate cards
+function createCertificateClickEffect(element) {
+    // Create ripple effect
+    const ripple = document.createElement('div');
+    ripple.style.position = 'absolute';
+    ripple.style.borderRadius = '50%';
+    ripple.style.background = 'rgba(0, 242, 254, 0.3)';
+    ripple.style.transform = 'scale(0)';
+    ripple.style.animation = 'certificateRipple 0.6s linear';
+    ripple.style.left = '50%';
+    ripple.style.top = '50%';
+    ripple.style.width = '100px';
+    ripple.style.height = '100px';
+    ripple.style.marginLeft = '-50px';
+    ripple.style.marginTop = '-50px';
+    ripple.style.pointerEvents = 'none';
+    ripple.style.zIndex = '10';
+    
+    // Add ripple animation styles
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes certificateRipple {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+        .certification-card {
+            position: relative;
+            overflow: hidden;
+        }
+    `;
+    document.head.appendChild(style);
+    
+    element.style.position = 'relative';
+    element.style.overflow = 'hidden';
+    element.appendChild(ripple);
+    
+    // Add scale effect
+    element.style.transform = 'scale(0.95)';
+    element.style.transition = 'transform 0.1s ease';
+    
+    setTimeout(() => {
+        element.style.transform = 'scale(1)';
+        ripple.remove();
+        document.head.removeChild(style);
+    }, 100);
+}
+
 // Weather functionality
 function initializeWeather() {
     const tempElement = document.getElementById('header-weather-temp');
