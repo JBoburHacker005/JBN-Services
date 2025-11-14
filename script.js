@@ -2,6 +2,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize all features
     initializeNavigation();
+    initializeMobileNav();
     initializeFloatingCards();
     initializeServiceCards();
     initializeAnimations();
@@ -60,6 +61,29 @@ function initializeNavigation() {
                 link.classList.add('active');
             }
         });
+    });
+}
+
+// Mobile navigation (hamburger) toggle
+function initializeMobileNav() {
+    const toggleBtn = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
+    const navActions = document.querySelector('.nav-actions');
+
+    if (!toggleBtn || !navMenu) return;
+
+    toggleBtn.addEventListener('click', function() {
+        const isOpen = navMenu.classList.toggle('is-open');
+        if (navActions) {
+            if (isOpen) {
+                navActions.classList.add('is-open');
+            } else {
+                navActions.classList.remove('is-open');
+            }
+        }
+        // small tap animation
+        toggleBtn.style.transform = 'scale(0.95)';
+        setTimeout(() => (toggleBtn.style.transform = ''), 120);
     });
 }
 
